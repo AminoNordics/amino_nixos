@@ -1,8 +1,5 @@
 { config, lib, pkgs, ... }:
 
-let
-  enabled = config.role == "full" || config.role == "worker";
-in
 {
   config = lib.mkIf enabled {
     services.caddy = {

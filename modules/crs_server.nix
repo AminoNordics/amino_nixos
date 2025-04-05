@@ -1,9 +1,5 @@
 { config, lib, pkgs, crs_server, ... }:
 
-let
-  enabled = config.role == "full" || config.role == "worker";
-  binary = crs_server.packages.${pkgs.system}.default;
-in
 {
   config = lib.mkIf enabled {
     users.users.crs = {

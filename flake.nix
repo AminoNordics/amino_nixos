@@ -11,28 +11,31 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, agenix, crs_server, ... }:
+    let
+      system = "x86_64-linux";
+    in
     {
       nixosConfigurations = {
         dev = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          inherit system;
           modules = [
             agenix.nixosModules.default
             ./hosts/dev.nix
             ./modules/agenix.nix
             ./modules/postgres.nix
             ({ ... }: { _module.args.crs_server = crs_server; })
-
+            ./modules/crs_server.nix
             ./modules/caddy.nix
           ];
         };
 
         installer = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          inherit system;
           modules = [
             ./hosts/installer.nix
-            ({ ... }: {
-              _module.args.nixpkgs = nixpkgs;
-            })
+            {
+              nixpkgs.config.allowUnfree = true;
+            }
           ];
         };
       };

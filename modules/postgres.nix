@@ -1,8 +1,5 @@
 { config, lib, pkgs, ... }:
 
-let
-  enabled = config.role == "full" || config.role == "database";
-in
 {
   config = lib.mkIf enabled {
     services.postgresql = {
