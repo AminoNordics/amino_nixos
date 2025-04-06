@@ -6,7 +6,7 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    curl git gvisor overmind docker kubo grpcurl
+    git 
   ];
 
   services.openssh = {
