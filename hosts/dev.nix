@@ -2,7 +2,6 @@
 
 {
   networking.hostName = "amino-dev";
-  role = "full";
 
   time.timeZone = "Europe/Oslo";
 
