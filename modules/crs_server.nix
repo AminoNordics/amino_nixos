@@ -6,6 +6,7 @@ in
 {
     users.users.crs = {
       isSystemUser = true;
+      group = "app";
       createHome = true;
       home = "/var/lib/crs";
     };
@@ -16,7 +17,7 @@ in
       serviceConfig = {
         ExecStart = "${binary}/bin/crs_server";
         Restart = "on-failure";
-        User = "app";
+        User = "crs";
         WorkingDirectory = "/var/lib/crs";
       };
     };
