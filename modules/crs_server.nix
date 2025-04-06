@@ -1,7 +1,6 @@
 { config, lib, pkgs, crs_server, ... }:
 
 {
-  config = lib.mkIf enabled {
     users.users.crs = {
       isSystemUser = true;
       createHome = true;
@@ -20,4 +19,3 @@
       };
     };
   };
-}

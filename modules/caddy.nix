@@ -1,7 +1,6 @@
 { config, lib, pkgs, ... }:
 
 {
-  config = lib.mkIf enabled {
     services.caddy = {
       enable = true;
       email = "testnixos@stadler.com";
@@ -12,5 +11,4 @@
         '';
       };
     };
-  };
 }
