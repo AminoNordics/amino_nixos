@@ -1,5 +1,8 @@
 { config, lib, pkgs, crs_server, ... }:
 
+let
+  binary = crs_server.packages.${pkgs.system}.default;
+in
 {
     users.users.crs = {
       isSystemUser = true;
@@ -15,7 +18,6 @@
         Restart = "on-failure";
         User = "crs";
         WorkingDirectory = "/var/lib/crs";
-        EnvironmentFile = config.age.secrets.crs_env.path;
       };
     };
   }
