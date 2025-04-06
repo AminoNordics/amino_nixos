@@ -4,11 +4,11 @@
   config = lib.mkIf enabled {
     services.caddy = {
       enable = true;
-      email = "you@example.com";
+      email = "testnixos@stadler.com";
 
-      virtualHosts."amino.example.com" = {
+      virtualHosts."test.nixos.akselerasjon.no" = {
         extraConfig = ''
-          reverse_proxy localhost:3000
+          reverse_proxy localhost:5055
         '';
       };
     };
