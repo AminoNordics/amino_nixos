@@ -2,7 +2,7 @@
 
 {
   imports = [
-    "${modulesPath}/installer/cd-dvd/installation-cd-base.nix"
+    "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
   ];
 
   isoImage.isoName = "amino-installer.iso";

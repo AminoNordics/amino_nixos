@@ -11,13 +11,10 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, agenix, crs_server, ... }:
-    let
-      system = "x86_64-linux";
-    in
     {
       nixosConfigurations = {
         dev = nixpkgs.lib.nixosSystem {
-          inherit system;
+          system = "x86_64-linux";
           modules = [
             agenix.nixosModules.default
             ./hosts/dev.nix
@@ -30,12 +27,9 @@
         };
 
         installer = nixpkgs.lib.nixosSystem {
-          inherit system;
+          system = "x86_64-linux";
           modules = [
             ./hosts/installer.nix
-            {
-              nixpkgs.config.allowUnfree = true;
-            }
           ];
         };
       };
