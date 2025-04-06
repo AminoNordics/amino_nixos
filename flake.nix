@@ -25,18 +25,31 @@
             ./modules/caddy.nix
           ];
         };
-        installer = nixpkgs.lib.nixosSystem {
+
+        installer_do = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
-        "${nixpkgs}/nixos/modules/virtualisation/digital-ocean-image.nix"
-        ./hosts/installer.nix
-        {
-          digitalOcean.image = {
-            compressionMethod = "gzip";
-            format = "raw";  # or "qcow2"
-          };
-        }
-      ];
+            "${nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix"
+            ./hosts/installer_do.nix
+            {
+              virtualisation = {
+                vmVariant = {
+                  virtualisation = {
+                    diskSize = 4096;  # Size in MB
+                    memorySize = 2048;  # RAM in MB
+                    qemu.options = [ "-smp 2" ];  # 2 CPU cores
+                  };
+                };
+              };
+            }
+          ];
+        };
+
+        installer_cirrus7 = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            ./hosts/installer_cirrus7.nix
+          ];
         };
       };
     };
