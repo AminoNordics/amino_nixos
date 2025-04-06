@@ -1,7 +1,6 @@
 { config, lib, pkgs, ... }:
 
 {
-  config = lib.mkIf enabled {
     services.postgresql = {
       enable = true;
       package = pkgs.postgresql_15;
@@ -15,4 +14,3 @@
       '';
     };
   };
-}
