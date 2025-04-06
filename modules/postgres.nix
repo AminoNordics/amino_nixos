@@ -16,18 +16,16 @@
       host    all     all     127.0.0.1/32     md5
     '';
 
-    ensureUsers = [
-      {
-        name = "admin";
-        # Superuser privileges
-        ensureDBOwnership = true;
+    initialScript = pkgs.writeText "init.sql" ''
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'admin') THEN
+          CREATE ROLE admin WITH LOGIN PASSWORD '${builtins.readFile config.age.secrets.postgres_password.path}' SUPERUSER;
+        END IF;
+      END
+      $$;
+    '';
 
-        # Use the agenix-decrypted secret at runtime
-        passwordFile = config.age.secrets.postgres_password.path;
-      }
-    ];
-
-    # Create a default database for the main user (optional)
     ensureDatabases = [ "crs" ];
   };
 }
