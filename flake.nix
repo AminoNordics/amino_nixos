@@ -19,7 +19,7 @@
         modules = [
           agenix.nixosModules.default
           ./hosts/dev.nix
-          ./modules/agenix.nix
+          # ./modules/agenix.nix
           ./modules/postgres.nix
           ./modules/crs_server.nix
           ./modules/caddy.nix
