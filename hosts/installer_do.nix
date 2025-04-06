@@ -16,7 +16,7 @@
   };
 
   users.users.root.openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExample/Key/Replace/This"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIYourRealSSHKeyHere"
   ];
 
   networking = {
