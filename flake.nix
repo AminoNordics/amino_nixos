@@ -11,10 +11,19 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, agenix, crs_server, ... }:
+    let
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
     {
+      packages.${system} = {
+        do_image = self.nixosConfigurations.installer_do.config.system.build.virtualBoxOVA;
+        cirrus7_iso = self.nixosConfigurations.installer_cirrus7.config.system.build.isoImage;
+      };
+
       nixosConfigurations = {
         dev = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          inherit system;
           modules = [
             agenix.nixosModules.default
             ./hosts/dev.nix
@@ -27,26 +36,20 @@
         };
 
         installer_do = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          inherit system;
           modules = [
-            "${nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix"
+            "${nixpkgs}/nixos/modules/virtualisation/virtualbox-image.nix"
             ./hosts/installer_do.nix
             {
-              virtualisation = {
-                vmVariant = {
-                  virtualisation = {
-                    diskSize = 4096;  # Size in MB
-                    memorySize = 2048;  # RAM in MB
-                    qemu.options = [ "-smp 2" ];  # 2 CPU cores
-                  };
-                };
+              virtualisation.virtualbox = {
+                baseImageSize = 50 * 1024;  # 50GB
               };
             }
           ];
         };
 
         installer_cirrus7 = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          inherit system;
           modules = [
             ./hosts/installer_cirrus7.nix
           ];
