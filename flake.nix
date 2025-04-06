@@ -25,13 +25,18 @@
             ./modules/caddy.nix
           ];
         };
-
         installer = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
-            ./hosts/installer.nix
-          ];
-        };
-      };
+        "${nixpkgs}/nixos/modules/virtualisation/digital-ocean-image.nix"
+        ./hosts/installer.nix
+        {
+          digitalOcean.image = {
+            compressionMethod = "gzip";
+            format = "raw";  # or "qcow2"
+          };
+        }
+      ];
     };
+  };
 }
