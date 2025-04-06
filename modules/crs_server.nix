@@ -16,7 +16,7 @@ in
       serviceConfig = {
         ExecStart = "${binary}/bin/crs_server";
         Restart = "on-failure";
-        User = "crs";
+        User = "app";
         WorkingDirectory = "/var/lib/crs";
       };
     };
