@@ -1,8 +1,8 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, modulesPath, ... }:
 
 {
-  imports = [
-    "${pkgs.path}/nixos/modules/virtualisation/digital-ocean-image.nix"
+   imports = [
+    "${modulesPath}/virtualisation/digital-ocean-image.nix"
   ];
 
   environment.systemPackages = with pkgs; [
