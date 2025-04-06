@@ -17,7 +17,11 @@
     in
     {
       packages.${system} = {
-        installer_do_image = self.nixosConfigurations.installer_do.config.system.build.digitalOceanImage;
+        installer_do_image = (nixpkgs.lib.nixosSystem {
+          inherit system;
+          modules = [ ./hosts/installer_do.nix ];
+        }).config.system.build.digitalOceanImage;
+        
         installer_cirrus7_iso = self.nixosConfigurations.installer_cirrus7.config.system.build.isoImage;
       };
 
@@ -32,14 +36,6 @@
             ({ ... }: { _module.args.crs_server = crs_server; })
             ./modules/crs_server.nix
             ./modules/caddy.nix
-          ];
-        };
-
-        installer_do = nixpkgs.lib.nixosSystem {
-          inherit system;
-          modules = [
-            "${nixpkgs}/nixos/modules/virtualisation/digital-ocean-image.nix"
-            ./hosts/installer_do.nix
           ];
         };
 

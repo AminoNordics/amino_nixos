@@ -1,6 +1,10 @@
-{ config, lib, modulesPath, pkgs, ... }:
+{ config, lib, pkgs, modulesPath, ... }:
 
 {
+  imports = [ 
+    "${modulesPath}/virtualisation/digital-ocean-image.nix"
+  ];
+
   networking.hostName = "amino-installer-do";
 
   services.openssh = {
