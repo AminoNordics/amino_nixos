@@ -20,9 +20,7 @@
       {
         name = "admin";
         # Superuser privileges
-        createDB = true;
-        createUser = true;
-        superuser = true;
+        ensureDBOwnership = true;
 
         # Use the agenix-decrypted secret at runtime
         passwordFile = config.age.secrets.postgres_password.path;
