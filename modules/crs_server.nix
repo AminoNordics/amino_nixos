@@ -18,4 +18,4 @@
         EnvironmentFile = config.age.secrets.crs_env.path;
       };
     };
-  };
+  }
