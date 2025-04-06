@@ -1,28 +1,16 @@
-{ config, lib, pkgs, ... }:
-
 {
-  imports = [
-    "${pkgs.path}/nixos/modules/virtualisation/digital-ocean-image.nix"
-  ];
+  description = "test do image";
 
-  environment.systemPackages = with pkgs; [
-    curl git gvisor overmind docker kubo grpcurl
-  ];
-
-  services.openssh = {
-    enable = true;
-    settings.PermitRootLogin = "yes";
-    settings.PasswordAuthentication = false;
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   };
 
-  users.users.root.openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIYourRealSSHKeyHere"
-  ];
-
-  networking = {
-    hostName = "nixos-do";
-    firewall.allowedTCPPorts = [ 22 80 443 8080 ];
+  outputs = { self, nixpkgs }: {
+    nixosconfigurations.installer_do = nixpkgs.lib.nixossystem {
+      system = "x86_64-linux";
+      modules = [
+        ./hosts/installer_do.nix
+      ];
+    };
   };
-
-  system.stateVersion = "23.11";
 }
