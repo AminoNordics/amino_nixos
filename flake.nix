@@ -1,48 +1,41 @@
 {
-  description = "Amino NixOS server with PostgreSQL, Caddy, crs_server, and agenix";
-
+  description = "NixOS configuration with dev service and DigitalOcean installer";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     agenix.url = "github:ryantm/agenix";
-    crs_server.url = "path:/Users/ask/git/amino_nixos_deploy/crs_server";
-    agenix.inputs.nixpkgs.follows = "nixpkgs";
-    crs_server.inputs.nixpkgs.follows = "nixpkgs";
+    crs-server.url = "path:../crs-server";
   };
-
-  outputs = { self, nixpkgs, flake-utils, agenix, crs_server, ... }:
-    let
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
-    in
-    {
-      packages.${system} = {
-        installer_do_image = (nixpkgs.lib.nixosSystem {
-          inherit system;
-          modules = [ ./hosts/installer_do.nix ];
-        }).config.system.build.digitalOceanImage;
-        
-        installer_cirrus7_iso = self.nixosConfigurations.installer_cirrus7.config.system.build.isoImage;
-      };
-
+  outputs = { self, nixpkgs, flake-utils, agenix, crs-server, ... }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs { inherit system; };
+      in
+      {
+        # DigitalOcean installer package
+        packages.installer_do = import ./hosts/installer_do.nix {
+          inherit pkgs;
+          system = system;
+        };
+        # Default package is the installer
+        defaultPackage = self.packages.${system}.installer_do;
+      }
+    ) // {
+      # NixOS configurations
       nixosConfigurations = {
+        # Development system configuration
         dev = nixpkgs.lib.nixosSystem {
-          inherit system;
+          system = "x86_64-linux";
+          specialArgs = {
+            crs_server = crs-server;
+          };
           modules = [
             agenix.nixosModules.default
             ./hosts/dev.nix
             ./modules/agenix.nix
             ./modules/postgres.nix
-            ({ ... }: { _module.args.crs_server = crs_server; })
             ./modules/crs_server.nix
             ./modules/caddy.nix
-          ];
-        };
-
-        installer_cirrus7 = nixpkgs.lib.nixosSystem {
-          inherit system;
-          modules = [
-            ./hosts/installer_cirrus7.nix
           ];
         };
       };
