@@ -17,8 +17,8 @@
     in
     {
       packages.${system} = {
-        do_image = self.nixosConfigurations.installer_do.config.system.build.virtualBoxOVA;
-        cirrus7_iso = self.nixosConfigurations.installer_cirrus7.config.system.build.isoImage;
+        installer_do_image = self.nixosConfigurations.installer_do.config.system.build.digitalOceanImage;
+        installer_cirrus7_iso = self.nixosConfigurations.installer_cirrus7.config.system.build.isoImage;
       };
 
       nixosConfigurations = {
@@ -38,13 +38,8 @@
         installer_do = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
-            "${nixpkgs}/nixos/modules/virtualisation/virtualbox-image.nix"
+            "${nixpkgs}/nixos/modules/virtualisation/digital-ocean-image.nix"
             ./hosts/installer_do.nix
-            {
-              virtualisation.virtualbox = {
-                baseImageSize = 50 * 1024;  # 50GB
-              };
-            }
           ];
         };
 
