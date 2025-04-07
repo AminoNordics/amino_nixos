@@ -1,6 +1,9 @@
+{ config, pkgs, lib, ... }:
+
 let
   initScriptPath = "/var/lib/postgresql/init.sql";
 in {
+
   age.secrets.postgres_password = {
     file = ../secrets/postgres_password.age;
     mode = "0400";
