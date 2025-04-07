@@ -1,10 +1,31 @@
-{ config, lib, pkgs, ... }:
-
-{
+let
+  initScriptPath = "/var/lib/postgresql/init.sql";
+in {
   age.secrets.postgres_password = {
     file = ../secrets/postgres_password.age;
     mode = "0400";
     owner = "postgres";
+  };
+
+  systemd.services.postgresql-init = {
+    wantedBy = [ "postgresql.service" ];
+    before = [ "postgresql.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      User = "postgres";
+      ExecStart = pkgs.writeShellScript "generate-init-sql" ''
+        PASS=$(cat ${config.age.secrets.postgres_password.path})
+        cat > ${initScriptPath} <<EOF
+        DO \$\$
+        BEGIN
+          IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'admin') THEN
+            CREATE ROLE admin WITH LOGIN PASSWORD '\$PASS' SUPERUSER;
+          END IF;
+        END
+        \$\$;
+        EOF
+      '';
+    };
   };
 
   services.postgresql = {
@@ -16,16 +37,7 @@
       host    all     all     127.0.0.1/32     md5
     '';
 
-    initialScript = pkgs.writeText "init.sql" ''
-      DO $$
-      BEGIN
-        IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'admin') THEN
-          CREATE ROLE admin WITH LOGIN PASSWORD '${builtins.readFile config.age.secrets.postgres_password.path}' SUPERUSER;
-        END IF;
-      END
-      $$;
-    '';
-
+    initialScript = initScriptPath;
     ensureDatabases = [ "crs" ];
   };
 }
