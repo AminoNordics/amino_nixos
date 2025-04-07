@@ -11,25 +11,31 @@ in {
   };
 
   systemd.services.postgresql-init = {
-    wantedBy = [ "postgresql.service" ];
-    before = [ "postgresql.service" ];
-    serviceConfig = {
-      Type = "oneshot";
-      User = "postgres";
-      ExecStart = pkgs.writeShellScript "generate-init-sql" ''
-        PASS=$(cat ${config.age.secrets.postgres_password.path})
-        cat > ${initScriptPath} <<EOF
-        DO \$\$
-        BEGIN
-          IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'admin') THEN
-            CREATE ROLE admin WITH LOGIN PASSWORD '\$PASS' SUPERUSER;
-          END IF;
-        END
-        \$\$;
-        EOF
-      '';
-    };
+  wantedBy = [ "postgresql.service" ];
+  before = [ "postgresql.service" ];
+  requires = [ "agenix.service" ];
+  after = [ "agenix.service" ];
+
+  serviceConfig = {
+    Type = "oneshot";
+    User = "postgres";
+
+    ExecStart = pkgs.writeShellScript "generate-init-sql" ''
+      mkdir -p /var/lib/postgresql
+
+      PASS=$(cat ${config.age.secrets.postgres_password.path})
+      cat > ${initScriptPath} <<EOF
+      DO \$\$
+      BEGIN
+        IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'admin') THEN
+          CREATE ROLE admin WITH LOGIN PASSWORD '\$PASS' SUPERUSER;
+        END IF;
+      END
+      \$\$;
+      EOF
+    '';
   };
+};
 
   services.postgresql = {
     enable = true;
