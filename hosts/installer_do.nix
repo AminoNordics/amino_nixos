@@ -3,7 +3,20 @@
 {
    imports = [
     "${modulesPath}/virtualisation/digital-ocean-image.nix"
+    ./modules/postgres.nix
   ];
+
+  # Enable agenix for secret management
+  age.identityPaths = [ "/var/lib/agenix/key" ];
+  age.secrets = {
+    postgres_password = {
+      file = ../secrets/postgres_password.age;
+      path = "/run/agenix.d/postgres_password";
+      mode = "600";
+      owner = "postgres";
+      group = "postgres";
+    };
+  };
 
   environment.systemPackages = with pkgs; [
     git 

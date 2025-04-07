@@ -29,6 +29,7 @@
       installer_do = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
+          agenix.nixosModules.default
           ./hosts/installer_do.nix
         ];
       };
