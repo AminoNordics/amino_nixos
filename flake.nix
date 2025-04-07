@@ -5,7 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     agenix.url = "github:ryantm/agenix";
-    crs-server.url = "path:/Users/ask/git/crs_server";
+    crs-server.url = "path:/root/crs_server";
 
     agenix.inputs.nixpkgs.follows = "nixpkgs";
     crs-server.inputs.nixpkgs.follows = "nixpkgs";
