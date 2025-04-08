@@ -20,6 +20,8 @@
 
   environment.systemPackages = with pkgs; [
     git 
+    vim
+    curl
   ];
 
   services.openssh = {

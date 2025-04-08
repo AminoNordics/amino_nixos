@@ -12,6 +12,14 @@
 boot.loader.grub.enable = true;
 boot.loader.grub.devices = [ "/dev/vda" ];
 
+environment.systemPackages = with pkgs; [
+  vim
+  git
+  htop
+  curl
+  lsof
+];
+
 users.groups.app = { };
 
 users.users.app = {
@@ -31,6 +39,8 @@ users.users.app = {
     settings.PermitRootLogin = "yes";
   };
   networking.firewall.allowedTCPPorts = [ 80 443 22];
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
 
 
   system.stateVersion = "24.05";
