@@ -19,6 +19,8 @@ in {
     User = "postgres";
 
     ExecStart = pkgs.writeShellScript "generate-init-sql" ''
+      mkdir -p /etc/postgres
+
 
       PASS=$(cat ${config.age.secrets.postgres_password.path})
       cat > ${initScriptPath} <<EOF
