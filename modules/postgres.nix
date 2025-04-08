@@ -13,8 +13,6 @@ in {
   systemd.services.postgresql-init = {
   wantedBy = [ "postgresql.service" ];
   before = [ "postgresql.service" ];
-  requires = [ "agenix.service" ];
-  after = [ "agenix.service" ];
 
   serviceConfig = {
     Type = "oneshot";
