@@ -1,7 +1,8 @@
 { config, pkgs, lib, ... }:
 
 let
-  initScriptPath = "/etc/postgres/init.sql";
+    initScriptPath = "/var/lib/postgresql/init.sql";
+
 in {
 
   age.secrets.postgres_password = {
@@ -19,7 +20,7 @@ in {
     User = "postgres";
 
     ExecStart = pkgs.writeShellScript "generate-init-sql" ''
-      mkdir -p /etc/postgres
+      mkdir -p /var/lib/postgresql
 
 
       PASS=$(cat ${config.age.secrets.postgres_password.path})
