@@ -30,6 +30,8 @@ users.users.app = {
     enable = true;
     settings.PermitRootLogin = "yes";
   };
+  networking.firewall.allowedTCPPorts = [ 80 443 22];
+
 
   system.stateVersion = "24.05";
 }
