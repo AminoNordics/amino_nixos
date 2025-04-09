@@ -8,28 +8,30 @@ let
     pkgs = nixpkgs.legacyPackages.${system};
     lib = pkgs.lib;
 
-    # Emulate `nixosSystem` evaluation to reuse NixOS modules
+    # Evaluate the NixOS config to extract shared config/env
     eval = lib.evalModules {
       modules = [
+        ./modules/local/common-options.nix
         {
           _module.args = {
             inherit pkgs lib;
             config = {
-              # age.secrets.postgres_password_dev.path = ./dummy_password.txt;
-              amino.role = "local";
-              
+              amino.role = "local";  # Force local config path
+              age.secrets.postgres_password_dev.path = ./dummy_password.txt;
             };
             crs_server = crs-server;
+                binary = "${crs-server.packages.${system}.default}";
+
+            
           };
         }
-        ./modules/crs_server.nix
-        ./modules/crs_server_config_local.nix
+        ./modules/crs_server/crs_server.nix
+        ./modules/crs_server/crs_server_config_local.nix
       ];
     };
 
     envVars = eval.config.services.crs_server.environment or [];
-    execPath = eval.config.systemd.services.crs_server.serviceConfig.ExecStart
-      or "${crs-server.packages.${system}.default or "crs_server"}";
+    crsBinary = "${crs-server.packages.${system}.default}/bin/crs_server";
 
   in pkgs.mkShell {
     name = "amino_dev";
@@ -47,8 +49,8 @@ let
 
       createdb crs || true
 
-      echo "Running CRS server from: ${execPath}"
-      ${execPath}
+      echo "Running CRS server from: ${crsBinary}"
+      ${crsBinary}
     '';
   };
 
