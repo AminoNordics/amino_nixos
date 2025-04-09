@@ -18,6 +18,11 @@ in {
   #     description = "Systemd service definitions.";
   #   };
   # };
+    options.services.crs_server.environment = mkOption {
+    type = types.listOf types.str;
+    default = [];
+    description = "Environment variables passed to the CRS server.";
+  };
 
   config = {
     users.users.crs = {
