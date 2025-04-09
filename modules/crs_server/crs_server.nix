@@ -5,19 +5,19 @@ with lib;
 let
   binaryPath = crs_server.packages.${pkgs.system}.default;
 in {
-  options = {
-    services.crs_server.environment = mkOption {
-      type = types.listOf types.str;
-      default = [];
-      description = "Environment variables passed to the CRS server.";
-    };
+  # options = {
+  #   services.crs_server.environment = mkOption {
+  #     type = types.listOf types.str;
+  #     default = [];
+  #     description = "Environment variables passed to the CRS server.";
+  #   };
 
-    systemd.services = mkOption {
-      type = types.attrs;
-      default = {};
-      description = "Systemd service definitions.";
-    };
-  };
+  #   systemd.services = mkOption {
+  #     type = types.attrs;
+  #     default = {};
+  #     description = "Systemd service definitions.";
+  #   };
+  # };
 
   config = {
     users.users.crs = {
