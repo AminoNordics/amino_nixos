@@ -11,11 +11,6 @@
       default = {};
       description = "Stub for systemd.services used in devshell eval.";
     };
-
-    services.crs_server.environment = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [];
-      description = "Environment variables for CRS server.";
-    };
   };
+ 
 }
