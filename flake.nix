@@ -23,8 +23,8 @@
           agenix.nixosModules.default
           ./hosts/base.nix
           ./modules/caddy.nix
-          ./modules/crs_server.nix
-          ./modules/crs_server_config_dev.nix
+          ./modules/crs_server/crs_server.nix
+          ./modules/crs_server/crs_server_config_dev.nix
         ];
       };
 
