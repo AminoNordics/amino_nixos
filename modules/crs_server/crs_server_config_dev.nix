@@ -11,8 +11,7 @@
   services.crs_server = {
     environment = [
       "ENV=development"
-      "PORT=3000"
-      "LOG_LEVEL=debug"
+      "PORT=5055"
       "POSTGRES_PASSWORD=${builtins.readFile config.age.secrets.postgres_password_dev.path}"
     ];
   };
