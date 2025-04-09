@@ -14,18 +14,6 @@
   outputs = { self, nixpkgs, flake-utils, agenix, crs-server, ... }: {
     # NixOS configurations
     nixosConfigurations = {
-      # Local development without Caddy
-      local = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { crs_server = crs-server; };
-        modules = [
-          agenix.nixosModules.default
-          ./hosts/base.nix
-          ./modules/crs_server.nix
-          ./modules/crs_server_config_local.nix
-        ];
-      };
-
       # Development environment with Caddy
       dev = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
