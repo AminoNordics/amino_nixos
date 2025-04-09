@@ -12,7 +12,7 @@
     environment = [
       "ENV=development"
       "PORT=5055"
-      "POSTGRES_PASSWORD=${builtins.readFile config.age.secrets.postgres_password_dev.path}"
+      "POSTGRES_PASSWORD=${builtins.readFile config.age.secrets.postgres_password_dev.valueFile}"
     ];
   };
 } 
