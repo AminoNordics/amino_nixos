@@ -1,7 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  networking.hostName = "amino-dev";
 
   time.timeZone = "Europe/Oslo";
   fileSystems."/" = {
@@ -40,8 +39,6 @@ users.users.app = {
   };
   networking.firewall.allowedTCPPorts = [ 80 443 22];
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-
 
   system.stateVersion = "24.05";
 }
