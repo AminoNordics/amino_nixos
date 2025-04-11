@@ -5,8 +5,8 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     agenix.url = "github:ryantm/agenix";
-    # crs-server.url = "path:/Users/ask/git/crs_server";
-    crs-server.url = "path:/root/crs_server";
+    crs-server.url = "path:/Users/ask/git/crs_server";
+    # crs-server.url = "path:/root/crs_server";
     # amino-api-v2.url = "path:/Users/ask/git/amino_api";
 
     agenix.inputs.nixpkgs.follows = "nixpkgs";
@@ -28,10 +28,12 @@
           agenix.nixosModules.default
           ./hosts/base.nix
           ./modules/caddy.nix
+          ./modules/postgresv2.nix
           ./modules/crs_server/crs_server.nix
           ./modules/crs_server/crs_server_config_dev.nix
           # ./modules/amino_api_v2/amino_api_v2.nix
           # ./modules/amino_api_v2/amino_api_v2_config_dev.nix
+
         ];
       };
 
