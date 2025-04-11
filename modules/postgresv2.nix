@@ -3,7 +3,7 @@
   services.postgresql = {
     enable = true;
     enableTCPIP = true; # allow localhost TCP access
-    settings.listen_addresses = "127.0.0.1"; # do NOT expose externally
+    settings.listen_addresses = lib.mkForce "127.0.0.1"; # do NOT expose externally
 
     authentication = pkgs.lib.mkOverride 10 ''
       # Allow local Unix socket access (optional, can remove if only TCP)
