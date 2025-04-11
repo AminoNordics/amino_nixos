@@ -3,7 +3,7 @@
 {
    imports = [
     "${modulesPath}/virtualisation/digital-ocean-image.nix"
-    ./modules/postgres.nix
+    # ./modules/postgres.nix
   ];
 
   # Enable agenix for secret management
