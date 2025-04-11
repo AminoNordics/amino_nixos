@@ -56,6 +56,6 @@
     };
 
     # Import devShell configuration
-    devShells = import ./devshell.nix { inherit self nixpkgs flake-utils crs-server amino-api-v2; };
+    devShells = import ./devshell.nix { inherit self nixpkgs flake-utils crs-server ; };
   };
 }
