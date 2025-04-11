@@ -1,6 +1,7 @@
 { config, pkgs, ... }:
 
 {
+  nixpkgs.config.allowUnfree = true;
 
   time.timeZone = "Europe/Oslo";
   fileSystems."/" = {
