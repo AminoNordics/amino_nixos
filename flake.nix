@@ -7,9 +7,11 @@
     agenix.url = "github:ryantm/agenix";
     # crs-server.url = "path:/Users/ask/git/crs_server";
     crs-server.url = "path:/root/crs_server";
+    # amino-api-v2.url = "path:/Users/ask/git/amino_api";
 
     agenix.inputs.nixpkgs.follows = "nixpkgs";
     crs-server.inputs.nixpkgs.follows = "nixpkgs";
+    # amino-api-v2.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { self, nixpkgs, flake-utils, agenix, crs-server, ... }: {
@@ -18,13 +20,18 @@
       # Development environment with Caddy
       dev = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { crs_server = crs-server; };
+        specialArgs = { 
+          crs_server = crs-server;
+          # amino_api_v2 = amino-api-v2;
+        };
         modules = [
           agenix.nixosModules.default
           ./hosts/base.nix
           ./modules/caddy.nix
           ./modules/crs_server/crs_server.nix
           ./modules/crs_server/crs_server_config_dev.nix
+          # ./modules/amino_api_v2/amino_api_v2.nix
+          # ./modules/amino_api_v2/amino_api_v2_config_dev.nix
         ];
       };
 
@@ -49,6 +56,6 @@
     };
 
     # Import devShell configuration
-    devShells = import ./devshell.nix { inherit self nixpkgs flake-utils crs-server; };
+    devShells = import ./devshell.nix { inherit self nixpkgs flake-utils crs-server amino-api-v2; };
   };
 }

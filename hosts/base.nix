@@ -17,6 +17,7 @@ environment.systemPackages = with pkgs; [
   htop
   curl
   lsof
+  vscode
 ];
 
 users.groups.app = { };
@@ -36,6 +37,7 @@ users.users.app = {
   services.openssh = {
     enable = true;
     settings.PermitRootLogin = "yes";
+    settings.X11Forwarding = true;
   };
   networking.firewall.allowedTCPPorts = [ 80 443 22];
   nix.settings.experimental-features = [ "nix-command" "flakes" ];

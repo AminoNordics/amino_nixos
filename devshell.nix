@@ -1,4 +1,4 @@
-{ self, nixpkgs, flake-utils, crs-server, ... }:
+{ self, nixpkgs, flake-utils, crs-server, amino-api-v2, ... }:
 
 let
 
@@ -21,18 +21,21 @@ let
               age.secrets.postgres_password_dev.path = ./dummy_password.txt;
             };
             crs_server = crs-server;
-                binary = "${crs-server.packages.${system}.default}";
-
-            
+            amino_api_v2 = amino-api-v2;
+            binary = "${crs-server.packages.${system}.default}";
           };
         }
         ./modules/crs_server/crs_server.nix
         ./modules/crs_server/crs_server_config_local.nix
+        ./modules/amino_api_v2/amino_api_v2.nix
+        ./modules/amino_api_v2/amino_api_v2_config_local.nix
       ];
     };
 
     envVars = eval.config.services.crs_server.environment or [];
+    aminoApiEnvVars = eval.config.services.amino_api_v2.environment or [];
     crsBinary = "${crs-server.packages.${system}.default}/bin/crs_server";
+    aminoApiBinary = "${amino-api-v2.packages.${system}.default}/bin/amino_api_v2";
 
   in pkgs.mkShell {
     name = "amino_dev";
@@ -40,6 +43,7 @@ let
     buildInputs = with pkgs; builtins.filter (x: x != null) [
       git vim curl htop lsof postgresql_15
       (crs-server.packages.${system}.default or null)
+      (amino-api-v2.packages.${system}.default or null)
     ];
 
     shellHook = ''
@@ -47,11 +51,23 @@ let
       pg_ctl -D $PGDATA start || true
 
       ${lib.concatStringsSep "\n" (map (e: "export ${e}") envVars)}
+      ${lib.concatStringsSep "\n" (map (e: "export ${e}") aminoApiEnvVars)}
 
       createdb crs || true
+      createdb amino_api || true
+      psql -d postgres -c "CREATE USER amino_api WITH PASSWORD 'development';" || true
+      psql -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE amino_api TO amino_api;" || true
+      psql -d amino_api -c "GRANT ALL ON SCHEMA public TO amino_api;" || true
 
       echo "Running CRS server from: ${crsBinary}"
-      ${crsBinary}
+      ${crsBinary} &
+      CRS_PID=$!
+
+      echo "Running Amino API v2 from: ${aminoApiBinary}"
+      ${aminoApiBinary} &
+      AMINO_API_PID=$!
+
+      trap 'kill $CRS_PID $AMINO_API_PID' EXIT
     '';
   };
 
